@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Producer.Settings;
 
 namespace Producer
 {
@@ -12,17 +11,20 @@ namespace Producer
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
-            await Producers.Producer.Run(GetKafkaProducerConfig(configuration));
-        }
 
-        private static ProducerConfig GetKafkaProducerConfig(IConfiguration configuration)
-        {
-            var kafkaSettings = configuration.Get<ApplicationSettings>().KafkaSettings;
-            var config = new ProducerConfig()
+            var producer = new Producers.Producer(configuration);
+            while (true)
             {
-                BootstrapServers = kafkaSettings.BootstrapServers,
-            };
-            return config;
+                var key = Console.ReadKey();
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    await producer.ProduceAsync("Events", $"event message {new Random().Next(1000)}");
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
     }
 }

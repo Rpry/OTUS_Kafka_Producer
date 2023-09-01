@@ -1,34 +1,43 @@
 using System;
 using System.Threading.Tasks;
 using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
+using Producer.Settings;
 
 namespace Producer.Producers
 {
     public class Producer
     {
-        public static async Task Run(ProducerConfig config)
+        private ProducerConfig _config;
+        
+        public Producer(IConfiguration config)
         {
-            using (var producer = new ProducerBuilder<string, string>(config).Build())
+            _config = GetKafkaProducerConfig(config);
+        }
+        
+        public async Task ProduceAsync(string topicName, string message)
+        {
+            using (var producer = new ProducerBuilder<string, string>(_config).Build())
             {
-                while (true)
-                {
-                    var key = Console.ReadKey();
-                    if (key.Key == ConsoleKey.Enter)
+                await producer.ProduceAsync(topicName,
+                    new Message<string, string>
                     {
-                        await producer.ProduceAsync("Events",
-                            new Message<string, string>
-                            {
-                                Key = Guid.NewGuid().ToString(),
-                                Value = "event message"
-                            });
-                        Console.WriteLine("A message was sent");
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                        Key = Guid.NewGuid().ToString(),
+                        Value = message
+                    });
+
+                Console.WriteLine(message);
             }
+        }
+        
+        private ProducerConfig GetKafkaProducerConfig(IConfiguration configuration)
+        {
+            var kafkaSettings = configuration.Get<ApplicationSettings>().KafkaSettings;
+            var config = new ProducerConfig()
+            {
+                BootstrapServers = kafkaSettings.BootstrapServers,
+            };
+            return config;
         }
     }
 }
