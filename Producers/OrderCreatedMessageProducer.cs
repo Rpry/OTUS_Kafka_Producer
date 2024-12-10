@@ -10,8 +10,8 @@ namespace Producer.Producers
 {
     public class OrderCreatedMessageProducer: BaseProducer<string, OrderCreatedMessage>
     {
-        //private const string TopicName = "order_events";
-        private const string TopicName = "topicname2";
+        private const string TopicName = "order_events";
+        //private const string TopicName = "topicname2";
         
         public OrderCreatedMessageProducer(
             ApplicationOptions applicationOptions,
