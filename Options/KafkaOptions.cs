@@ -1,6 +1,6 @@
 namespace Producer.Settings
 {    
-    public class KafkaSettings
+    public class KafkaOptions
     {
         public string BootstrapServers { get; set; }
     }
