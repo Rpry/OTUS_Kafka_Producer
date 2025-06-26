@@ -24,7 +24,7 @@ namespace Producer.Producers
         {
             try
             {
-                await Producer.ProduceAsync(TopicName,  new Message<string, OrderCreatedMessage>
+                await Producer.ProduceAsync(TopicName, new Message<string, OrderCreatedMessage>
                     {
                         Key = key,
                         Value = message
