@@ -8,7 +8,7 @@ using Producer.Options;
 
 namespace Producer.Producers
 {
-    public class OrderCreatedMessageProducer: BaseProducer<string, OrderCreatedMessage>
+    public sealed class OrderCreatedMessageProducer: BaseProducer<string, OrderCreatedMessage>
     {
         //private const string TopicName = "order_events";
         private const string TopicName = "topicname2";

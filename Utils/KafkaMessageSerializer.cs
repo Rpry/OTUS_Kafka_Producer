@@ -5,7 +5,7 @@ using Producer.Models;
 
 namespace Producer.Utils;
 
-public class KafkaMessageSerializer<T> : ISerializer<T> where T: IKafkaMessage
+public sealed class KafkaMessageSerializer<T> : ISerializer<T> where T: IKafkaMessage
 {
     public byte[] Serialize(T data, SerializationContext context)
     {

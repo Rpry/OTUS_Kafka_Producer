@@ -8,7 +8,7 @@ using Producer.Options;
 
 namespace Producer
 {
-    class Program
+    internal class Program
     {
         private static async Task Main(string[] args)
         {
@@ -22,9 +22,9 @@ namespace Producer
                 builder.AddConsole();
             });
             ILogger logger = loggerFactory.CreateLogger<Program>();
-            
+
             var producer = new Producers.OrderCreatedMessageProducer(options, logger);
-            
+
             /*
             long orderId = new Random().Next();
             await producer.ProduceAsync(orderId, new OrderCreatedMessage
@@ -35,7 +35,7 @@ namespace Producer
                 },
                 CancellationToken.None);
             */
-            
+
             /*
             long orderId = new Random().Next();
             await producer.ProduceAsync(orderId, 2, new OrderCreatedMessage
@@ -47,18 +47,18 @@ namespace Producer
                 CancellationToken.None);
 */
             #region Cycle
-            
+
             for (int i = 0; i < 10; i++)
             {
                 //long orderId = new Random().Next();
                 long orderId = i;
                 await producer.ProduceAsync(orderId.ToString(), new OrderCreatedMessage
                 //await producer.ProduceAsync(orderId, new OrderCreatedMessage
-                    {
-                        ChangedAt = DateTimeOffset.UtcNow,
-                        Id = orderId,
-                        State = OrderState.Created
-                    },
+                {
+                    ChangedAt = DateTimeOffset.UtcNow,
+                    Id = orderId,
+                    State = OrderState.Created
+                },
                     CancellationToken.None);
             }
 
