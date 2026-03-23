@@ -10,16 +10,16 @@ namespace Producer.Producers
 {
     public class OrderCreatedMessageProducer: BaseProducer<string, OrderCreatedMessage>
     {
-        private const string TopicName = "order_events";
-        //private const string TopicName = "topicname2";
-        
+        //private const string TopicName = "order_events";
+        private const string TopicName = "topicname2";
+
         public OrderCreatedMessageProducer(
             ApplicationOptions applicationOptions,
             ILogger logger):
             base(applicationOptions.KafkaOptions, logger)
         {
         }
-        
+
         public async Task ProduceAsync(string key, OrderCreatedMessage message, CancellationToken cancellationToken)
         {
             try
@@ -38,7 +38,7 @@ namespace Producer.Producers
                 Logger.LogError(e.Message);
             }
         }
-        
+ 
         public async Task ProduceAsync(string orderId, int partitionId, OrderCreatedMessage message, CancellationToken cancellationToken)
         {
             var partition = new TopicPartition(TopicName, new Partition(partitionId));

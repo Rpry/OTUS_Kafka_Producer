@@ -9,11 +9,10 @@ namespace Producer.Producers;
 public class BaseProducer<TKey, TValue> where TValue : IKafkaMessage
 {
     protected readonly ILogger Logger;
-    
-    public IProducer<TKey, TValue> Producer { get; }
-    
-    
-    public BaseProducer(KafkaOptions kafkaOptions, ILogger logger)
+
+    protected IProducer<TKey, TValue> Producer { get; }
+
+    protected BaseProducer(KafkaOptions kafkaOptions, ILogger logger)
     {
         Logger = logger;
         var producerConfig = new ProducerConfig()
@@ -21,7 +20,7 @@ public class BaseProducer<TKey, TValue> where TValue : IKafkaMessage
             BootstrapServers = kafkaOptions.BootstrapServers,
             //Partitioner = Partitioner.Random,
             Partitioner = Partitioner.Consistent,
-
+            Acks = Acks.Leader
         };
         var producerBuilder = new ProducerBuilder<TKey, TValue>(producerConfig);
         Producer = producerBuilder
